@@ -187,9 +187,13 @@ const RegisterPage = () => {
 
           <div className="text-center">
             <p className="text-base-content/60">
-              Already have an account?{" "}
-              <Link to="/login" className="link link-primary">
-                Sign in
+              Already have an account?
+              <Link to="/login" className="link link-primary no-underline">
+                {
+                  <span className="ml-2 font-semibold text-primary cursor-pointer hover:text-primary/80 link-hover text-green-500 ">
+                    Sign in
+                  </span>
+                }
               </Link>
             </p>
           </div>
