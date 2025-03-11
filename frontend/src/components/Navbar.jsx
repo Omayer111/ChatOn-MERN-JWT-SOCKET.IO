@@ -31,18 +31,19 @@ const Navbar = () => {
             >
               <User size={18} /> Profile
             </Link>
-            <Link
-              to="/settings"
-              className="pl-3 text-base-content hover:text-primary transition flex items-center gap-1"
-            >
-              <Settings size={18} /> Settings
-            </Link>
+
             <button
               onClick={logOut}
               className="text-[15px] btn btn-ghost border-red-700 btn-sm"
             >
               Logout
             </button>
+            <Link
+              to="/settings"
+              className="pl-3 text-base-content hover:text-primary transition flex items-center gap-1"
+            >
+              <Settings size={18} /> Settings
+            </Link>
           </>
         ) : (
           <>
@@ -89,6 +90,7 @@ const Navbar = () => {
               >
                 <User size={18} /> Profile
               </Link>
+
               <Link
                 to="/settings"
                 className="text-base-content hover:text-primary transition flex items-center gap-2 w-full"

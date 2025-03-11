@@ -39,6 +39,7 @@ export const register = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         profilePic: newUser.profilePic,
+        memberSince: newUser.createdAt,
       });
     } else {
       return res.status(400).json({ message: "All fields are required" });
@@ -72,6 +73,7 @@ export const login = async (req, res) => {
       name: user.name,
       email: user.email,
       profilePic: user.profilePic,
+      memberSince: user.createdAt,
     });
   } catch (err) {
     console.log("error in login controller", err);
