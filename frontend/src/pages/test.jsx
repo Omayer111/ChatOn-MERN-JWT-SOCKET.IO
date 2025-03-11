@@ -1,11 +1,7 @@
-import { React, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import AuthImagePattern from "../components/AuthImagePattern";
-import { toast } from "react-hot-toast";
-
 import {
   Eye,
-  Loader,
   EyeOff,
   Loader2,
   Lock,
@@ -15,46 +11,37 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const RegisterPage = () => {
+import AuthImagePattern from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
+
+const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     password: "",
   });
 
-  const { isSigningUp, signUp } = useAuthStore();
+  const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if (!formData.name) {
-      toast.error("Name is required");
-      return false;
-    }
-    if (!formData.email) {
-      toast.error("Email is required");
-      return false;
-    }
-    if (!formData.password) {
-      toast.error("Password is required");
-      return false;
-    }
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters long");
-      return false;
-    }
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Invalid email format");
-      return false;
-    }
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      await signUp(formData);
-      toast.success("Account created successfully");
-    }
+
+    const success = validateForm();
+
+    if (success === true) signup(formData);
   };
 
   return (
@@ -78,51 +65,38 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-6 bg-base-100/50 p-8 rounded-2xl shadow-xl shadow-black backdrop-blur-md"
-          >
-            {/* Full Name */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-semibold text-base-content">
-                  Full Name
-                </span>
+                <span className="label-text font-medium">Full Name</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div className="bg-primary/10 p-2 rounded-md z-30">
-                    <User className="w-4 h-4  text-primary" />
-                  </div>
+                  <User className="size-5 text-base-content/40" />
                 </div>
                 <input
                   type="text"
-                  className="input input-bordered w-full pl-14 focus:ring-2 focus:ring-primary focus:outline-none"
+                  className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
-                  value={formData.name}
+                  value={formData.fullName}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    setFormData({ ...formData, fullName: e.target.value })
                   }
                 />
               </div>
             </div>
 
-            {/* Email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-semibold text-base-content">
-                  Email
-                </span>
+                <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div className="bg-primary/10 p-2 rounded-md z-30">
-                    <Mail className="w-4 h-4 text-primary" />
-                  </div>
+                  <Mail className="size-5 text-base-content/40" />
                 </div>
                 <input
                   type="email"
-                  className="input input-bordered w-full pl-14 focus:ring-2 focus:ring-primary focus:outline-none"
+                  className={`input input-bordered w-full pl-10`}
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) =>
@@ -132,22 +106,17 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            {/* Password */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-semibold text-base-content">
-                  Password
-                </span>
+                <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div className="bg-primary/10 p-2 rounded-md z-30">
-                    <Lock className="w-4 h-4 text-primary" />
-                  </div>
+                  <Lock className="size-5 text-base-content/40" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="input input-bordered w-full pl-14 focus:ring-2 focus:ring-primary focus:outline-none"
+                  className={`input input-bordered w-full pl-10`}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) =>
@@ -160,18 +129,17 @@ const RegisterPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="size-5 text-base-content/50" />
+                    <EyeOff className="size-5 text-base-content/40" />
                   ) : (
-                    <Eye className="size-5 text-base-content/50" />
+                    <Eye className="size-5 text-base-content/40" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
-              className="btn btn-primary w-full shadow-md"
+              className="btn btn-primary w-full"
               disabled={isSigningUp}
             >
               {isSigningUp ? (
@@ -205,5 +173,4 @@ const RegisterPage = () => {
     </div>
   );
 };
-
-export default RegisterPage;
+export default SignUpPage;
