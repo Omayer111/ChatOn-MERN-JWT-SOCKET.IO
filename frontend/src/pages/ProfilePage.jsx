@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import useAuthStore from "../store/useAuthStore.js";
-import { useState } from "react";
 import { Camera, Mail, User } from "lucide-react";
 
 const ProfilePage = () => {
@@ -21,37 +20,32 @@ const ProfilePage = () => {
       await updateProfile({ profilePic: base64Image });
     };
   };
+
   return (
-    <div className="h-screen pt-20">
-      <div className="max-w-2xl mx-auto p-4 py-8">
-        <div className="bg-base-300 rounded-xl p-6 space-y-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold ">Profile</h1>
-            <p className="mt-2">Your profile information</p>
+    <div className="min-h-screen bg-[#0f0f0f] pt-20 px-4 text-white">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-[#1a1a1a] shadow-xl rounded-2xl p-8 space-y-10 border border-zinc-800">
+          {/* Header */}
+          <div className="text-center space-y-1">
+            <h1 className="text-3xl font-bold text-white">Your Profile</h1>
+            <p className="text-sm text-zinc-400">Manage your personal info</p>
           </div>
 
-          {/* avatar upload section */}
-
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
+          {/* Avatar */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative group">
               <img
                 src={selectedImg || authUser.profilePic || "/avatar.png"}
                 alt="Profile"
-                className="size-32 rounded-full object-cover border-4 "
+                className="w-32 h-32 rounded-full object-cover border-4 border-zinc-700 shadow-md group-hover:brightness-75 transition-all"
               />
               <label
                 htmlFor="avatar-upload"
-                className={`
-                  absolute bottom-0 right-0 
-                  bg-base-content hover:scale-105
-                  p-2 rounded-full cursor-pointer 
-                  transition-all duration-200
-                  ${
-                    isUpdatingProfile ? "animate-pulse pointer-events-none" : ""
-                  }
-                `}
+                className={`absolute bottom-0 right-0 bg-teal-500 hover:bg-teal-400 p-2 rounded-full cursor-pointer shadow-lg transition-all ${
+                  isUpdatingProfile ? "animate-pulse pointer-events-none" : ""
+                }`}
               >
-                <Camera className="w-5 h-5 text-base-200" />
+                <Camera className="w-5 h-5 text-white" />
                 <input
                   type="file"
                   id="avatar-upload"
@@ -65,42 +59,48 @@ const ProfilePage = () => {
             <p className="text-sm text-zinc-400">
               {isUpdatingProfile
                 ? "Uploading..."
-                : "Click the camera icon to update your photo"}
+                : "Click the camera icon to upload photo"}
             </p>
           </div>
 
+          {/* Profile Info */}
           <div className="space-y-6">
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+            <div>
+              <div className="text-sm text-zinc-400 flex items-center gap-2 mb-1">
                 <User className="w-4 h-4" />
                 Full Name
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+              <div className="px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg">
                 {authUser?.name}
-              </p>
+              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+            <div>
+              <div className="text-sm text-zinc-400 flex items-center gap-2 mb-1">
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+              <div className="px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg">
                 {authUser?.email}
-              </p>
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 bg-base-300 rounded-xl p-6">
-            <h2 className="text-lg font-medium  mb-4">Account Information</h2>
+          {/* Account Info */}
+          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6">
+            <h2 className="text-lg font-semibold mb-4 text-white">
+              Account Information
+            </h2>
             <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between py-2 border-b border-zinc-700">
-                <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
+              <div className="flex items-center justify-between border-b border-zinc-700 pb-2">
+                <span className="text-zinc-400">Member Since</span>
+                <span className="text-white">
+                  {authUser.createdAt?.split("T")[0]}
+                </span>
               </div>
-              <div className="flex items-center justify-between py-2">
-                <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-zinc-400">Account Status</span>
+                <span className="text-green-500 font-medium">Active</span>
               </div>
             </div>
           </div>
