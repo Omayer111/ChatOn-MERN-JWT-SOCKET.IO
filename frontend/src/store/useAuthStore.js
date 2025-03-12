@@ -27,6 +27,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/register", formData);
       set({ authUser: res.data });
+      toast.success("Signed up successfully!");
     } catch (err) {
       toast.error("Error signing up:", err);
     } finally {
@@ -39,6 +40,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       set({ authUser: res.data });
+      toast.success("Logged in successfully!");
     } catch (err) {
       toast.error("Error logging in:", err);
     } finally {
@@ -50,6 +52,7 @@ export const useAuthStore = create((set) => ({
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      toast.success("Logged out successfully!");
     } catch (err) {
       toast.error("Error logging out:", err);
     }
@@ -61,6 +64,7 @@ export const useAuthStore = create((set) => ({
       const res = await axiosInstance.put("/auth/update-profile", formData);
       set({ authUser: res.data });
       console.log("res", res);
+      toast.success("Profile updated successfully!");
     } catch (err) {
       toast.error("Error updating profile:", err);
     } finally {

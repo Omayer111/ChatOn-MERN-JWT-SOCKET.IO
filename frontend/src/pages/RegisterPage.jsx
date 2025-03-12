@@ -53,7 +53,6 @@ const RegisterPage = () => {
     e.preventDefault();
     if (validateForm()) {
       await signUp(formData);
-      toast.success("Account created successfully");
     }
   };
 
