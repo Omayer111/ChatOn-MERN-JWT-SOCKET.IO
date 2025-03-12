@@ -79,7 +79,7 @@ const RegisterPage = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 bg-base-100/50 p-8 rounded-2xl shadow-xl shadow-black backdrop-blur-md"
+            className="space-y-6 bg-base-100/50 p-8 rounded-2xl shadow-xl shadow-gray backdrop-blur-md"
           >
             {/* Full Name */}
             <div className="form-control">
