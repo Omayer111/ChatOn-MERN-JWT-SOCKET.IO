@@ -20,14 +20,13 @@ const NoChatSelected = () => {
 
         {/* Subtitle */}
         <p className="text-base text-zinc-500 leading-relaxed">
-          To begin chatting, please select a conversation from the sidebar. Stay
-          connected and start your next conversation now.
+          Select a conversation to start chatting with your friends.
         </p>
 
         {/* Optional CTA or friendly tip */}
-        <p className="text-sm text-zinc-400 italic">
+        {/* <p className="text-sm text-zinc-400 italic">
           Tip: You can also start a new chat from the contacts list.
-        </p>
+        </p> */}
       </div>
     </div>
   );
