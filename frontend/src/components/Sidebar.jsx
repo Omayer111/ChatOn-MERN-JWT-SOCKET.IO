@@ -3,6 +3,7 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Users } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const Sidebar = () => {
   const { users, isUsersLoading, fetchUsers, setSelectedUser, selectedUser } =
@@ -10,7 +11,7 @@ const Sidebar = () => {
 
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  const onlineUsers = [];
+  const { onlineUsers } = useAuthStore();
 
   useEffect(() => {
     fetchUsers();
@@ -73,7 +74,7 @@ const Sidebar = () => {
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="font-medium truncate">{user.name}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
