@@ -49,4 +49,28 @@ export const useChatStore = create((set, get) => ({
   setSelectedUser: (user) => {
     set({ selectedUser: user });
   },
+
+  updateMessage: async (id, text) => {
+    try {
+      const res = await axiosInstance.patch(`/message/${id}`, { text });
+      set({
+        messages: get().messages.map((message) =>
+          message._id === id ? res.data : message
+        ),
+      });
+    } catch (error) {
+      toast.error("Failed to update message");
+    }
+  },
+
+  deleteMessage: async (id) => {
+    try {
+      await axiosInstance.delete(`/message/${id}`);
+      set({
+        messages: get().messages.filter((message) => message._id !== id),
+      });
+    } catch (error) {
+      toast.error("Failed to delete message");
+    }
+  },
 }));

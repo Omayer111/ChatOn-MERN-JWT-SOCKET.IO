@@ -5,14 +5,23 @@ import { formatMessageTime } from "../lib/utils";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { Image, X, ZoomIn } from "lucide-react";
+import { Image, X, ZoomIn, MoreVertical, Edit, Trash2 } from "lucide-react";
 
 const ChatContainer = () => {
-  const { selectedUser, messages, isMessagesLoading, fetchMessages } =
-    useChatStore();
+  const {
+    selectedUser,
+    messages,
+    isMessagesLoading,
+    fetchMessages,
+    deleteMessage,
+    updateMessage,
+  } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [editingMessage, setEditingMessage] = useState(null);
+  const [editText, setEditText] = useState("");
 
   useEffect(() => {
     if (selectedUser) {
@@ -26,12 +35,52 @@ const ChatContainer = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    // Close menu when clicking outside
+    const handleClickOutside = () => setActiveMenu(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   const openImageViewer = (imageUrl) => {
     setExpandedImage(imageUrl);
   };
 
   const closeImageViewer = () => {
     setExpandedImage(null);
+  };
+
+  const toggleMenu = (e, messageId) => {
+    e.stopPropagation();
+    setActiveMenu(activeMenu === messageId ? null : messageId);
+  };
+
+  const handleEdit = (e, message) => {
+    e.stopPropagation();
+    setEditingMessage(message);
+    setEditText(message.text || "");
+    setActiveMenu(null);
+  };
+
+  const handleDelete = (e, messageId) => {
+    e.stopPropagation();
+    deleteMessage(messageId);
+    setActiveMenu(null);
+  };
+
+  const submitEdit = (e) => {
+    e.preventDefault();
+    console.log(editingMessage._id);
+    if (editingMessage && editText.trim()) {
+      updateMessage(editingMessage._id, editText);
+      setEditingMessage(null);
+      setEditText("");
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingMessage(null);
+    setEditText("");
   };
 
   if (isMessagesLoading)
@@ -52,6 +101,9 @@ const ChatContainer = () => {
         {messages.map((message, index) => {
           const isLastMessage = index === messages.length - 1;
           const isMyMessage = message.senderId === authUser._id;
+
+          // Only show options menu for user's own messages
+          const canManageMessage = isMyMessage;
 
           return (
             <div
@@ -82,38 +134,108 @@ const ChatContainer = () => {
                 </time>
               </div>
 
-              <div
-                className={`chat-bubble ${
-                  isMyMessage
-                    ? "bg-slate-900 text-primary-content"
-                    : "bg-base-200"
-                } shadow-sm`}
-              >
-                {message.image && (
-                  <div className="relative group mb-2">
-                    <div className="overflow-hidden rounded-md max-w-xs">
-                      <img
-                        src={message.image}
-                        alt="Attachment"
-                        className="object-contain rounded-md cursor-pointer transform transition-transform hover:scale-[1.02]"
-                        onClick={() => openImageViewer(message.image)}
-                      />
-                    </div>
+              {editingMessage && editingMessage._id === message._id ? (
+                <form
+                  onSubmit={submitEdit}
+                  className="chat-bubble bg-base-200 p-0 overflow-hidden"
+                >
+                  <textarea
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    className="w-full p-3 bg-transparent resize-none focus:outline-none text-sm"
+                    autoFocus
+                  ></textarea>
+                  <div className="flex border-t border-base-300">
                     <button
-                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => openImageViewer(message.image)}
+                      type="submit"
+                      className="flex-1 py-1.5 text-xs font-medium text-primary hover:bg-base-300/50"
                     >
-                      <ZoomIn size={16} />
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      className="flex-1 py-1.5 text-xs font-medium hover:bg-base-300/50"
+                    >
+                      Cancel
                     </button>
                   </div>
-                )}
-                {message.text && (
-                  <p className="text-sm leading-relaxed">{message.text}</p>
-                )}
-              </div>
+                </form>
+              ) : (
+                <div
+                  className={`chat-bubble ${
+                    isMyMessage
+                      ? "bg-primary text-primary-content"
+                      : "bg-base-200"
+                  } shadow-sm relative group`}
+                >
+                  {/* Action menu button */}
+                  {canManageMessage && (
+                    <div className="absolute left-0 top-0 -translate-y-1/2 -translate-x-[110%] opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => toggleMenu(e, message._id)}
+                        className="btn btn-circle btn-xs btn-ghost bg-base-100/80 hover:bg-base-200 shadow-sm"
+                      >
+                        <MoreVertical size={14} />
+                      </button>
+
+                      {/* Dropdown menu */}
+                      {activeMenu === message._id && (
+                        <div
+                          className="absolute left-0 mt-1 bg-base-100 shadow-lg rounded-lg overflow-hidden z-10 border border-base-300 min-w-[120px]"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <ul>
+                            <li>
+                              <button
+                                onClick={(e) => handleEdit(e, message)}
+                                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-base-200 text-sm"
+                              >
+                                <Edit size={14} />
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                onClick={(e) => handleDelete(e, message._id)}
+                                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-base-200 text-sm text-error"
+                              >
+                                <Trash2 size={14} />
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {message.image && (
+                    <div className="relative mb-2">
+                      <div className="overflow-hidden rounded-md max-w-xs">
+                        <img
+                          src={message.image}
+                          alt="Attachment"
+                          className="object-contain rounded-md cursor-pointer transform transition-transform hover:scale-[1.02]"
+                          onClick={() => openImageViewer(message.image)}
+                        />
+                      </div>
+                      <button
+                        className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => openImageViewer(message.image)}
+                      >
+                        <ZoomIn size={16} />
+                      </button>
+                    </div>
+                  )}
+                  {message.text && (
+                    <p className="text-sm leading-relaxed">{message.text}</p>
+                  )}
+                </div>
+              )}
 
               <div className="chat-footer opacity-50 text-xs mt-0.5">
-                {/* Can add read receipts or additional info here */}
+                {message.edited && <span className="italic mr-1">edited</span>}
               </div>
             </div>
           );
@@ -128,7 +250,7 @@ const ChatContainer = () => {
         )}
       </div>
 
-      <MessageInput />
+      <MessageInput editingMessage={editingMessage} cancelEdit={cancelEdit} />
 
       {/* Image modal viewer */}
       {expandedImage && (

@@ -70,3 +70,34 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const updateMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    const updatedMessage = await Message.findByIdAndUpdate(
+      id,
+      { text },
+      { new: true }
+    );
+
+    res.status(200).json(updatedMessage);
+  } catch (err) {
+    console.log("error in update message controller", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Message.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Message deleted successfully" });
+  } catch (err) {
+    console.log("error in delete message controller", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
