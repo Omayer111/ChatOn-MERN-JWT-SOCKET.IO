@@ -15,6 +15,8 @@ const ChatContainer = () => {
     fetchMessages,
     deleteMessage,
     updateMessage,
+    subscribeToMessages,
+    unsubscribeFromMessages,
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
@@ -24,10 +26,26 @@ const ChatContainer = () => {
   const [editText, setEditText] = useState("");
 
   useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
+  useEffect(() => {
     if (selectedUser) {
       fetchMessages(selectedUser._id);
+      subscribeToMessages();
+      return () => {
+        // Clean up subscription
+        unsubscribeFromMessages();
+      };
     }
-  }, [selectedUser._id, fetchMessages]);
+  }, [
+    selectedUser._id,
+    fetchMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {

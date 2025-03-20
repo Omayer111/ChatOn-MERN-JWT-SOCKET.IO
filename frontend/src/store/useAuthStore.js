@@ -91,26 +91,26 @@ export const useAuthStore = create((set, get) => ({
     const socket = io("http://localhost:3000", {
       query: { userId: authUser._id },
     });
-    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+    });
 
     socket.on("onlineUsers", (data) => {
       set({ onlineUsers: data });
+      console.log("Online users:", data);
     });
 
     set({ socket });
-
-    console.log(get().onlineUsers);
   },
 
   disconnectSocket: () => {
-    if (get().socket?.connected) {
-      get().socket.disconnect();
-      get().socket.on("onlineUsers", (data) => {
-        set({ onlineUsers: data });
-      });
+    const { socket } = get();
+    if (socket) {
+      socket.emit("leave", get().authUser?._id);
+      socket.disconnect();
+      set({ socket: null });
     }
-    set({ socket: null });
-    console.log(get().onlineUsers);
   },
 }));
 
