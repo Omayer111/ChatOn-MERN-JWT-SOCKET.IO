@@ -9,6 +9,12 @@ A full-stack real-time chat application built using the MERN stack, incorporatin
 - [Installation](#installation)
 - [Usage](#usage)
 
+![image](https://github.com/user-attachments/assets/75ed4a6f-b0d8-4514-b91c-2f2866363c2a)
+![image](https://github.com/user-attachments/assets/20f692cd-e8ea-4b14-b399-46c9351bdd4a)
+![image](https://github.com/user-attachments/assets/e72b9737-b464-4f99-990b-997aeceaa3ab)
+![image](https://github.com/user-attachments/assets/87a3b4e0-5db4-4a57-a00a-dc73432a7666)
+![image](https://github.com/user-attachments/assets/afe6309a-6d6e-4830-99f2-c8e1fcdc1926)
+
 
 ## Overview
 ChatOn is a scalable chat application that provides a modern user experience with real-time messaging, built on the robust MERN stack. Leveraging JSON Web Tokens (JWT) for secure authentication and Socket.IO for live interactivity, ChatOn delivers an engaging platform for users to connect instantly.
