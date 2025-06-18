@@ -8,11 +8,19 @@ A full-stack real-time chat application built using the MERN stack, incorporatin
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Usage](#usage)
-
+### Registration:
 ![image](https://github.com/user-attachments/assets/75ed4a6f-b0d8-4514-b91c-2f2866363c2a)
+
+### Login:
 ![image](https://github.com/user-attachments/assets/20f692cd-e8ea-4b14-b399-46c9351bdd4a)
+
+### Chatpage:
 ![image](https://github.com/user-attachments/assets/e72b9737-b464-4f99-990b-997aeceaa3ab)
+
+### User-Profile:
 ![image](https://github.com/user-attachments/assets/87a3b4e0-5db4-4a57-a00a-dc73432a7666)
+
+### Theme:
 ![image](https://github.com/user-attachments/assets/afe6309a-6d6e-4830-99f2-c8e1fcdc1926)
 
 
